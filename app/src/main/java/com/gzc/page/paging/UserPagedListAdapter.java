@@ -5,7 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -66,6 +68,8 @@ public class UserPagedListAdapter extends PagedListAdapter<MessageListBean.DataB
         private TextView timeView;
         private TextView contentView;
         private View redPointView;
+//        private ProgressBar progressBar;
+        private FrameLayout contentLayout;
 
 
         public UserItemViewHolder(@NonNull View itemView) {
@@ -75,31 +79,40 @@ public class UserPagedListAdapter extends PagedListAdapter<MessageListBean.DataB
             timeView = (TextView)itemView. findViewById(R.id.time_view);
             contentView = (TextView)itemView. findViewById(R.id.content_view);
             redPointView = (View)itemView. findViewById(R.id.red_point_view);
+//            progressBar = itemView.findViewById(R.id.progress_bar_view);
+            contentLayout = itemView.findViewById(R.id.content_layout);
         }
 
         public void setData(MessageListBean.DataBean dataBean,int position,Context context){
-            messageTitleView.setText(dataBean.getTitle());
-            contentView.setText(dataBean.getContent());
+//            if(dataBean==null){
+//                contentLayout.setVisibility(View.GONE);
+//                progressBar.setVisibility(View.VISIBLE);
+//            }else {
+//                contentLayout.setVisibility(View.VISIBLE);
+//                progressBar.setVisibility(View.GONE);
+                messageTitleView.setText(dataBean.getTitle());
+                contentView.setText(dataBean.getContent());
 //            timeView.setText(TimeTools.getPublishFormat(dataBean.getCreatetime() * 1000));
 //            timeView.setText(TimeTools.getYMD(new Date(dataBean.getCreatetime() * 1000)));
-            timeView.setText(TimeTools.formatData(dataBean.getCreatetime() * 1000,new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
-            if(position==0){
-                ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                layoutParams.topMargin = DensityUtil.dip2px(context,10);
-                itemView.setLayoutParams(layoutParams);
-            }
+                timeView.setText(TimeTools.formatData(dataBean.getCreatetime() * 1000, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
+                if (position == 0) {
+                    ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    layoutParams.topMargin = DensityUtil.dip2px(context, 10);
+                    itemView.setLayoutParams(layoutParams);
+                }
 
-            if(dataBean.getIsread()==1){
-                messageTitleView.setTextColor(ContextCompat.getColor(context,R.color.color_aaaaaa));
-                timeView.setTextColor(ContextCompat.getColor(context,R.color.color_aaaaaa));
-                contentView.setTextColor(ContextCompat.getColor(context,R.color.color_aaaaaa));
-                redPointView.setVisibility(View.GONE);
-            }else{
-                messageTitleView.setTextColor(ContextCompat.getColor(context,R.color.color_333333));
-                timeView.setTextColor(ContextCompat.getColor(context,R.color.color_aaaaaa));
-                contentView.setTextColor(ContextCompat.getColor(context,R.color.color_666666));
-                redPointView.setVisibility(View.VISIBLE);
-            }
+                if (dataBean.getIsread() == 1) {
+                    messageTitleView.setTextColor(ContextCompat.getColor(context, R.color.color_aaaaaa));
+                    timeView.setTextColor(ContextCompat.getColor(context, R.color.color_aaaaaa));
+                    contentView.setTextColor(ContextCompat.getColor(context, R.color.color_aaaaaa));
+                    redPointView.setVisibility(View.GONE);
+                } else {
+                    messageTitleView.setTextColor(ContextCompat.getColor(context, R.color.color_333333));
+                    timeView.setTextColor(ContextCompat.getColor(context, R.color.color_aaaaaa));
+                    contentView.setTextColor(ContextCompat.getColor(context, R.color.color_666666));
+                    redPointView.setVisibility(View.VISIBLE);
+                }
+//            }
         }
     }
 }

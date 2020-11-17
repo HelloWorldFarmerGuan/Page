@@ -25,8 +25,6 @@ import retrofit2.Response;
  */
 public class PositionalUserDataSource extends PositionalDataSource<MessageListBean.DataBean> {
 
-    public static final int PAGE_SIZE = 20 ;
-
     private final Map<String,Object> paramsMap = new LinkedHashMap<>();
 
 
@@ -51,8 +49,8 @@ public class PositionalUserDataSource extends PositionalDataSource<MessageListBe
         paramsMap.put("timestamp","20201116165146");
         paramsMap.put("system","android");
         paramsMap.put("source","a.6.1.5");
-        paramsMap.put("weiqtoken","pudvkvgtntjtnxlw16055272235fb266b7028c7");
-        paramsMap.put("count",PAGE_SIZE);
+        paramsMap.put("weiqtoken",Constants.TOKEN);
+        paramsMap.put("count",Constants.PAGE_SIZE);
         paramsMap.put("page",startPosition+1);
         paramsMap.put("type","system");
         paramsMap.put("sign",sign(paramsMap));
@@ -66,16 +64,14 @@ public class PositionalUserDataSource extends PositionalDataSource<MessageListBe
                                            @NonNull Response<MessageListBean> response) {
                         if(response.isSuccessful()) {
                             MessageListBean body = response.body();
-                            Log.e("guanzhenchuang",new Gson().toJson(body));
                             if(null != body) {
-                                callback.onResult(body.getData(),startPosition, Integer.MAX_VALUE);
+                                callback.onResult(body.getData(),startPosition);
                             }
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<MessageListBean> call, @NonNull Throwable t) {
-                        Log.e("guanzhenchuang","onFailure:"+t.getMessage());
                     }
                 });
     }
@@ -90,16 +86,17 @@ public class PositionalUserDataSource extends PositionalDataSource<MessageListBe
     @Override
     public void loadRange(@NonNull LoadRangeParams params,
                           @NonNull final LoadRangeCallback<MessageListBean.DataBean> callback) {
-        Log.e("guanzhenchuang","startPosition:"+params.startPosition);
+        Log.e("guanzhenchuang","loadRange");
         paramsMap.clear();
         paramsMap.put("bid","1002");
         paramsMap.put("version","v1.0.0");
         paramsMap.put("timestamp","20201116165146");
         paramsMap.put("system","android");
         paramsMap.put("source","a.6.1.5");
-        paramsMap.put("weiqtoken","pudvkvgtntjtnxlw16055272235fb266b7028c7");
-        paramsMap.put("count",PAGE_SIZE);
-        paramsMap.put("page",params.startPosition+1);
+        paramsMap.put("weiqtoken",Constants.TOKEN);
+        paramsMap.put("count",Constants.PAGE_SIZE);
+        //startPosition是条目的position，不是页码
+        paramsMap.put("page",params.startPosition/10+1);
         paramsMap.put("type","system");
         paramsMap.put("sign",sign(paramsMap));
         RetrofitClient.
@@ -111,7 +108,17 @@ public class PositionalUserDataSource extends PositionalDataSource<MessageListBe
                     public void onResponse(@NonNull Call<MessageListBean> call, @NonNull Response<MessageListBean> response) {
                         if(response.isSuccessful() && null != response.body()){
                             MessageListBean body = response.body();
-                            callback.onResult(body.getData());
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        Thread.sleep(5000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    callback.onResult(body.getData());
+                                }
+                            }).start();
                         }
                     }
 

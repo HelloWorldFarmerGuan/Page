@@ -15,6 +15,8 @@ public class UserDataSourceFactory extends DataSource.Factory<Integer, MessageLi
 
     // 这里可以根据需求换成另外两种DataSource即可。
     private MutableLiveData<PositionalUserDataSource> liveDataSource = new MutableLiveData<>();
+//    private MutableLiveData<PagedKeyUserDataSource> liveDataSource = new MutableLiveData<>();
+//    private MutableLiveData<ItemKeyedUserDataSource> liveDataSource = new MutableLiveData<>();
 
     @NonNull
     @Override

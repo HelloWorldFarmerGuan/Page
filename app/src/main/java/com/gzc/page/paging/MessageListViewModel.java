@@ -19,11 +19,11 @@ public class MessageListViewModel extends ViewModel {
 
     public MessageListViewModel(){
         PagedList.Config config = new PagedList.Config.Builder()
-                .setEnablePlaceholders(true)
-                .setPageSize(PositionalUserDataSource.PAGE_SIZE)
+                .setEnablePlaceholders(false)//是否启用占位符，若为true，则视为固定数量的item
+                .setPageSize(Constants.PAGE_SIZE)
                 .setPrefetchDistance(3)
-                .setInitialLoadSizeHint(PositionalUserDataSource.PAGE_SIZE*3)
-                .setMaxSize(65536* PositionalUserDataSource.PAGE_SIZE)
+                .setInitialLoadSizeHint(Constants.PAGE_SIZE*3)
+                .setMaxSize(65536* Constants.PAGE_SIZE)
                 .build();
         userPagedList = new LivePagedListBuilder<>(new UserDataSourceFactory(),config).build();
     }
